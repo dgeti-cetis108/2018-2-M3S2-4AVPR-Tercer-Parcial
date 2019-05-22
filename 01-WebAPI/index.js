@@ -20,18 +20,31 @@ app.post("/api/login", (req, res) => {
 });
 
 // ruta para crear nuevo usuario
-app.post("/api/user/new", (req, res) => {});
+app.post("/api/user/new", async (req, res) => {
+  // TODO: code to save a new valid user
+});
 
 // ruta para validar la existencia del nombre de usuario
 app.post("/api/user/validate/name", async (req, res) => {
   let username = req.body.user;
   let rst = await validateUserName(username);
-  console.log(`valor de rst = ${rst}`);
-  res.send(rst);
+  if (rst.total == 1) {
+    res.send({ isValid: false });
+  } else {
+    res.send({ isValid: true });
+  }
 });
 
 // ruta para validar la existecia del correo electronico
-app.post("/api/user/validate/email", (req, res) => {});
+app.post("/api/user/validate/email", async (req, res) => {
+  let useremail = req.body.email;
+  let rst = await validateUserEmail(useremail);
+  if (rst.total == 1) {
+    res.send({ isValid: false });
+  } else {
+    res.send({ isValid: true });
+  }
+});
 
 app.listen(port, function() {
   console.log(`Servidor ExpressJS corriendo en el puerto ${port}`);
@@ -62,15 +75,26 @@ function crearConectarDb() {
 }
 
 function validateUserName(username) {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     let query = `SELECT count(id) as 'total' FROM users where name=?`;
     db.get(query, [username], (err, row) => {
       if (err) {
         console.error(err.message);
-        reject(err.message);
       }
-      console.log(`row dentro de db.get = ${row}`);
-      resolve(row); // { total: 1 }
+      console.log(row);
+      resolve(row); // true: { total: 1 }  false: undefined
+    });
+  });
+}
+
+function validateUserEmail(useremail) {
+  return new Promise(resolve => {
+    let query = `SELECT count(id) as 'total' FROM users where email=?`;
+    db.get(query, [useremail], (err, row) => {
+      if (err) {
+        console.error(err.message);
+      }
+      resolve(row); // true: { total: 1 }  false: undefined
     });
   });
 }
