@@ -21,7 +21,15 @@ app.post("/api/login", (req, res) => {
 
 // ruta para crear nuevo usuario
 app.post("/api/user/new", async (req, res) => {
-  // TODO: code to save a new valid user
+  let user = {};
+  user.name = req.body.username;
+  user.password = req.body.userpassword;
+  user.firstname = req.body.userfirstname;
+  user.lastname = req.body.userlastname;
+  user.email = req.body.useremail;
+
+  await saveNewUser(user);
+  res.send({ isSaved: true });
 });
 
 // ruta para validar la existencia del nombre de usuario
@@ -44,6 +52,10 @@ app.post("/api/user/validate/email", async (req, res) => {
   } else {
     res.send({ isValid: true });
   }
+});
+// ruta para editar el perfil
+app.post("/api/user/profile/edit", async (req, res) => {
+  // TODO: code here
 });
 
 app.listen(port, function() {
@@ -96,5 +108,21 @@ function validateUserEmail(useremail) {
       }
       resolve(row); // true: { total: 1 }  false: undefined
     });
+  });
+}
+
+function saveNewUser(user) {
+  return new Promise(resolve => {
+    let query = `INSERT INTO users (name,password,firstname,lastname,email) VALUES (?,?,?,?,?)`;
+    db.run(
+      query,
+      [user.name, user.password, user.firstname, user.lastname, user.email],
+      err => {
+        if (err) {
+          console.error(err.message);
+        }
+        resolve();
+      }
+    );
   });
 }
