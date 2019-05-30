@@ -55,12 +55,75 @@ app.post("/api/user/validate/email", async (req, res) => {
 });
 // ruta para editar el perfil
 app.post("/api/user/profile/edit", async (req, res) => {
-  // TODO: code here
+  let user = {};
+  user.id = req.body.user_id;
+  user.firstname = req.body.user_firstname;
+  user.lastname = req.body.user_lastname;
+  user.email = req.body.user_email;
+  try {
+    await saveUserChanges(user, res);
+  } catch (error) {
+    console.log(error);
+    res.send({ isDataSaved: null });
+  }
+});
+
+// ruta para cambiar contraseña
+app.post("/api/user/save/newpassword", async (req, res) => {
+  let user = {};
+  user.id = req.body.user_id;
+  user.newpassword = req.body.user_newpassword;
+  try {
+    await changeUserPassword(user, res);
+  } catch (error) {
+    console.log(error);
+    res.send({ isDataSaved: null });
+  }
 });
 
 app.listen(port, function() {
   console.log(`Servidor ExpressJS corriendo en el puerto ${port}`);
 });
+
+function changeUserPassword(user, res) {
+  return new Promise((resolve, reject) => {
+    let query = "UPDATE users SET password=? WHERE id=?";
+    db.run(query, [user.newpassword, user.id], function(err) {
+      if (err) {
+        reject(err.message);
+      }
+      resolve(this.changes);
+    });
+  }).then(val => {
+    if (val > 0) {
+      res.send({ isDataSaved: true });
+    } else {
+      res.send({ isDataSaved: false });
+    }
+  });
+}
+
+function saveUserChanges(user, res) {
+  return new Promise((resolve, reject) => {
+    let query = "UPDATE users SET firstname=?, lastname=?, email=? WHERE id=?";
+    db.run(
+      query,
+      [user.firstname, user.lastname, user.email, user.id],
+      function(err) {
+        if (err) {
+          reject(err.message);
+        }
+        resolve(this.changes);
+      }
+    );
+  }).then(val => {
+    if (val > 0) {
+      res.send({ isDataSaved: true });
+    } else {
+      res.send({ isDataSaved: false });
+    }
+  });
+}
 
 function login(user, password, res) {
   let query = `SELECT id,name,firstname,lastname,email
