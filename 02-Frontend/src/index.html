@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Login Form</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- inicio hero -->
+    <section class="hero is-primary is-fullheight">
+      <!-- inicio hero-body -->
+      <div class="hero-body">
+        <!-- inicio container -->
+        <div class="container">
+          <!-- inicio columns -->
+          <div class="columns">
+            <!-- inicio column -->
+            <div
+              class="column is-0-mobile is-6-tablet is-offset-3-tablet is-4-desktop is-offset-4-desktop"
+            >
+              <!-- inicio box -->
+              <div class="box">
+                <figure class="image has-uemstis-logo">
+                  <img src="images/logo-uemstis.png" alt="Logo UEMSTIS" />
+                </figure>
+                <!-- inicio form -->
+                <form>
+                  <div class="field">
+                    <!-- Usuario -->
+                    <p class="control has-icons-left">
+                      <input
+                        type="text"
+                        class="input is-medium"
+                        placeholder="Usuario"
+                        name="user_name"
+                        id="user_name"
+                        required
+                      />
+                      <span class="icon is-left">
+                        <i class="fas fa-user"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field">
+                    <!-- Contraseña -->
+                    <p class="control has-icons-left">
+                      <input
+                        type="password"
+                        class="input is-medium"
+                        placeholder="Contraseña"
+                        name="user_password"
+                        id="user_password"
+                        required
+                      />
+                      <span class="icon is-left">
+                        <i class="fas fa-lock"></i>
+                      </span>
+                    </p>
+                  </div>
+                  <div class="field">
+                    <label class="checkbox">
+                      <input type="checkbox" />
+                      Recordar mi cuenta
+                    </label>
+                  </div>
+
+                  <button
+                    class="button is-link is-medium is-fullwidth"
+                    type="submit"
+                    id="loginButton"
+                  >
+                    <span>
+                      <i class="fas fa-sign-in-alt"></i>
+                      Iniciar sesión
+                    </span>
+                  </button>
+                </form>
+                <!-- fin form -->
+              </div>
+              <!-- fin box -->
+              <div class="buttons is-centered">
+                <a class="button is-text" href="signup.html">
+                  Registrate!
+                </a>
+                <a class="button is-text" href="forgot.html">
+                  ¿Olvidaste tu contraseña?
+                </a>
+              </div>
+            </div>
+            <!-- fin column -->
+          </div>
+          <!-- fin columns -->
+        </div>
+        <!-- fin container -->
+      </div>
+      <!-- fin hero-body -->
+    </section>
+    <!-- fin hero -->
+
+    <!-- section.hero>.hero-body>.container -->
+    <script>
+      document.getElementById('loginButton').addEventListener('click', userLogin, true);
+
+      function userLogin(e) {
+        // detener la accion de envio del formulario
+        e.preventDefault();
+
+        // realizar la peticion a la webapi enviando los valores del formulario
+        const xhttp = new XMLHttpRequest();
+        const url = 'http://localhost:3000/api/user/login';
+        let params = `user_name=${document.getElementById('user_name')}&user_password=${document.getElementById('user_password')}`;
+        xhttp.open('POST', url, true);
+        xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhttp.onreadystatechange = function() {
+          if (xhttp.readyState == 4 && xhttp.status == 200) {
+            console.log('Peticion realizada con exito.');
+            console.log(xhttp.response);
+            if (xhttp.response) {
+              console.log('Login successful');
+            } else {
+              console.log('Login fail');
+            }
+          }
+        }
+        xhttp.send(params);
+
+        // evaluar el resultado y emitir alguna accion
+        
+      }
+    </script>
+  </body>
+</html>

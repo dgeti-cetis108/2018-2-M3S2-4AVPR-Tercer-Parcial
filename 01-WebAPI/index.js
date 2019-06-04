@@ -1,8 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const sqlite = require("sqlite3").verbose();
+const cors = require("cors");
 const app = express();
 const port = 3000;
+
+app.use(cors());
 
 // crear o utilizar la base de datos
 const db = crearConectarDb();
@@ -12,9 +15,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // acceso para validar el inicio de sesion
 // http://localhost:3000/api/login
-app.post("/api/login", (req, res) => {
-  let user = req.body.user;
-  let password = req.body.password;
+app.post("/api/user/login", (req, res) => {
+  let user = req.body.user_name;
+  let password = req.body.user_password;
 
   login(user, password, res);
 });

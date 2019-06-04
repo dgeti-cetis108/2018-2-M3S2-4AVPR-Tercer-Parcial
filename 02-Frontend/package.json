@@ -1,0 +1,26 @@
+{
+  "name": "loginform-with-bulma",
+  "version": "0.1.0",
+  "description": "Login form created with Bulma CSS Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "bulma",
+    "login",
+    "form"
+  ],
+  "author": "@bidkarAragon",
+  "license": "ISC",
+  "dependencies": {
+    "bulma": "^0.7.4",
+    "express": "^4.16.4",
+    "sqlite3": "^4.0.6"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.8.1"
+  }
+}
