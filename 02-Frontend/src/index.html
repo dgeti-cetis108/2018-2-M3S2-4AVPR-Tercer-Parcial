@@ -27,6 +27,9 @@
                 </figure>
                 <!-- inicio form -->
                 <form>
+                  <div id="errorLogin" class="has-text-danger has-text-centered hidden">
+                    Inicio de sesión incorrecto.
+                  </div>
                   <div class="field">
                     <!-- Usuario -->
                     <p class="control has-icons-left">
@@ -110,24 +113,23 @@
         // realizar la peticion a la webapi enviando los valores del formulario
         const xhttp = new XMLHttpRequest();
         const url = 'http://localhost:3000/api/user/login';
-        let params = `user_name=${document.getElementById('user_name')}&user_password=${document.getElementById('user_password')}`;
+        let user = document.getElementById('user_name').value;
+        let password = document.getElementById('user_password').value;
+        let params = `user_name=${user}&user_password=${password}`;
         xhttp.open('POST', url, true);
         xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
         xhttp.onreadystatechange = function() {
-          if (xhttp.readyState == 4 && xhttp.status == 200) {
-            console.log('Peticion realizada con exito.');
-            console.log(xhttp.response);
-            if (xhttp.response) {
-              console.log('Login successful');
+          if (xhttp.readyState == XMLHttpRequest.DONE && xhttp.status == 200) {
+            let result = JSON.parse(xhttp.response);
+            // evaluar el resultado y emitir alguna accion
+            if (result.loggedIn == true) {
+              window.location = "profile.html";
             } else {
-              console.log('Login fail');
+              document.getElementById("errorLogin").classList.toggle("hidden");
             }
           }
         }
         xhttp.send(params);
-
-        // evaluar el resultado y emitir alguna accion
-        
       }
     </script>
   </body>

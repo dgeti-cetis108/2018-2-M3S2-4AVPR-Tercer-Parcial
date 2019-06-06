@@ -136,9 +136,9 @@ function login(user, password, res) {
       console.error(err.message);
     }
     if (row) {
-      res.json(row);
+      res.send({ loggedIn: true, data: row });
     } else {
-      res.send(false);
+      res.send({ loggedIn: false });
     }
   });
 }
